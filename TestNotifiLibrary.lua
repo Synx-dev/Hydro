@@ -175,20 +175,17 @@ function lib:MakeNotification(notif_table:table)
 	local nt = notif_table or {
 		Title = "focat's notification lib",
 		Text = "This is a test notification.",
-        	Icon = "",
 		Duration = 5
 	}
 
 	local title = nt.Title
 	local text = nt.Text
-    	local icon = nt.Icon
 	local dur = nt.Duration
 
 	local newNotif = baseNotif:Clone()
 	newNotif.Parent = Converted["_Notifications"]
 	newNotif.Title.Text = title
 	newNotif.Description.Text = text
-    	newNotf.Icon.Image = icon
 	newNotif.Visible = true
 	newNotif.Name = "CiriusNotification"
 
