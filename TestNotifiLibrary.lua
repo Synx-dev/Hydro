@@ -1,225 +1,137 @@
---Testing Area, Use for fixing bugs or updating script without deleted source
+-- << Services >> --
+local GuiService, TweenService, Core do
+	GuiService = game:GetService("GuiService"); TweenService = game:GetService("TweenService"); Core = game:GetService("CoreGui");
+end
 
---[[
--- = focat's notification lib = --
-  _____      .__   
-_/ ____\____ |  |  
-\   __\/    \|  |  
- |  | |   |  \  |__
- |__| |___|  /____/
-           \/      
--- = focat's notification lib = --
+local protectGui = (gethui) or (syn and syn["protect_gui"])
 
-#noskidsallowed
-https://github.com/Code1Tech/utils/
+-- Pew
+local CheckStr = (function(I1) if type(I1) == "string" and tostring(I1) then return true; end; return false; end)
+local CheckTbl = (function(I1) if type(I1) == "table" and I1["Frame"] and I1["TextLabel"] then return true; end; return false; end)
+local Var, CTheme = nil, nil;
+if (...) then
+    Var = (function(I1) if I1[1] and CheckStr(I1[1]) then return I1[1]; elseif I1[2] and CheckStr(I1[2]) then return I1[2]; else return nil; end; end)(...) or nil;
+    CTheme = (function(I1) if I1[1] and CheckTbl(I1[1]) then return I1[1]; elseif I1[2] and CheckTbl(I1[2]) then return I1[2]; end; end)(...) or nil;
+end;
+-- Pew
 
-[ How To Use - Snippet ]
-local fnl = loadstring(game:HttpGetAsync 'https://raw.githubusercontent.com/Code1Tech/utils/main/notification.lua')()
+local New = function(Class, Properties)
+	local Obj, Properties = Instance.new(Class), Properties or {}
+	if Obj:IsA("GuiObject") then Obj["AnchorPoint"] = Vector2.new(0.5, 0.5); Obj["BorderSizePixel"] = 0 end;
+	for I, V in pairs(Properties) do if not rawequal(I, "Parent") then Obj[I] = V; end; end
+	if Properties["Parent"] then Obj["Parent"] = Properties["Parent"] end; return Obj;
+end
 
-fnl:MakeNotification({
-	Title = "Your Title Here",
-	Text = "Your Text Here",
-	Duration = 5 -- Your Duration (in seconds)
-})
-[ ez ]
+local Tween = function(I, T, S, D, G, RT)
+	local ObjTween = TweenService:Create(I, TweenInfo.new(T, Enum["EasingStyle"][S], Enum["EasingDirection"][D]), G);
+	if RT then return ObjTween; else coroutine.wrap(function() ObjTween:Play() end)() end;
+end;
 
-]]--
---protect = (syn.protect_gui or gethui) --// Protect GUI/Instance Function \\--
+if Core:FindFirstChild("NordNotifications") then Core:FindFirstChild("NordNotifications"):Destroy() end
+local UI = New("ScreenGui", {
+	["IgnoreGuiInset"] = true; ["Name"] = "NordNotifications"; ["ResetOnSpawn"] = false; ["ZIndexBehavior"] = "Global"
+}); --[[protectGui(UI)]]; UI["Parent"] = Core;
 
-local lib = {}
+local NotificationHolder = New("Frame", {
+	Parent = UI, BackgroundTransparency = 1, Position = UDim2.new(0.924, 0, 0.5, 0), Size = UDim2.new(0.151, 0, 1, 0)
+}); New("UIListLayout", {Parent = NotificationHolder, Padding = UDim.new(0, 15), HorizontalAlignment = "Center", VerticalAlignment = "Bottom"});
+New("UIPadding", {Parent = NotificationHolder, PaddingBottom = UDim.new(0, 20), PaddingTop = UDim.new(0, 20)});
 
-local Converted = {
-	["_focat's notification lib"] = Instance.new("ScreenGui");
-	["_Notifications"] = Instance.new("Frame");
-	["_Template"] = Instance.new("Frame");
-	["_UICorner"] = Instance.new("UICorner");
-	["_Title"] = Instance.new("TextLabel");
-	["_Description"] = Instance.new("TextLabel");
-	["_Icon"] = Instance.new("ImageButton");
-	["_UIStroke"] = Instance.new("UIStroke");
-	["_UIListLayout"] = Instance.new("UIListLayout");
+local Nord = {};
+
+Nord["Config"] = { ["Theme"] = "Discord" };
+
+Nord["Themes"] = {
+    ["dark"] = {
+        ["Frame"] = {["BackgroundColor3"] = Color3.fromRGB(70, 70, 73)},
+        ["TextLabel"] = {["TextColor3"] = Color3.new(1, 1, 1)}
+    },
+    ["light"] = {
+        ["Frame"] = {["BackgroundColor3"] = Color3.new(1, 1, 1)},
+        ["TextLabel"] = {["TextColor3"] = Color3.new(0, 0, 0)}
+    },
+    ["discord"] = {
+        ["Frame"] = {["BackgroundColor3"] = Color3.fromRGB(44, 47, 51)},
+        ["TextLabel"] = {["TextColor3"] = Color3.fromRGB(114, 137, 218)}
+    },
+    ["spotify"] = {
+        ["Frame"] = {["BackgroundColor3"] = Color3.fromRGB(25, 20, 20)},
+        ["TextLabel"] = {["TextColor3"] = Color3.fromRGB(30, 215, 96)}
+    }
 }
 
--- Properties:
 
-Converted["_focat's notification lib"].DisplayOrder = 999999999
-Converted["_focat's notification lib"].ResetOnSpawn = false
-Converted["_focat's notification lib"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Converted["_focat's notification lib"].Name = "focat's notification lib"
---protect(Converted["_focat's notification lib"]) :( bypassed
-Converted["_focat's notification lib"].Parent = game:GetService("CoreGui")
+function Nord:TextConstraint(Item)
+	New("UITextSizeConstraint", {Parent = Item, MaxTextSize = Item["TextSize"]}); Item["TextScaled"] = true
+end
 
-Converted["_Notifications"].AnchorPoint = Vector2.new(1, 1)
-Converted["_Notifications"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Converted["_Notifications"].BackgroundTransparency = 1
-Converted["_Notifications"].BorderSizePixel = 0
-Converted["_Notifications"].ClipsDescendants = true
-Converted["_Notifications"].Position = UDim2.new(1, -25, 1, -25)
-Converted["_Notifications"].Size = UDim2.new(0, 296, 0, 578)
-Converted["_Notifications"].Name = "Notifications"
-Converted["_Notifications"].Parent = Converted["_focat's notification lib"]
+function Nord:ApplyTheme(Theme, Frame)
+    local Desc = Frame:GetDescendants()
+    local Theme = CTheme or Nord["Themes"][Theme:lower()]; -- Pew
+    if Theme then
+        for i,v in next, Theme do
+            for a,b in next, Desc do
+                if b["ClassName"] == i and b["Name"] ~= "Line" then
+                    for c,d in next, v do
+                        b[c] = d;
+                    end;
+                elseif i == "Frame" then
+                    for c,d in next, v do
+                        Frame[c] = d;
+                    end;
+                end;
+            end;
+        end;
+    end;
+end;
 
-Converted["_Template"].AnchorPoint = Vector2.new(0.5, 0.5)
-Converted["_Template"].BackgroundColor3 = Color3.fromRGB(43.00000123679638, 43.00000123679638, 43.00000123679638)
-Converted["_Template"].BackgroundTransparency = 0.20000000298023224
-Converted["_Template"].BorderSizePixel = 0
-Converted["_Template"].Position = UDim2.new(0.5, 0, 0.915000021, 0)
-Converted["_Template"].Size = UDim2.new(0, 295, 0, 91)
-Converted["_Template"].Visible = false
-Converted["_Template"].ZIndex = 100
-Converted["_Template"].Name = "Template"
-Converted["_Template"].Parent = Converted["_Notifications"]
-
-Converted["_UICorner"].Parent = Converted["_Template"]
-
-Converted["_Title"].Font = Enum.Font.GothamBold
-Converted["_Title"].Text = "fnl"
-Converted["_Title"].TextColor3 = Color3.fromRGB(240.00000089406967, 240.00000089406967, 240.00000089406967)
-Converted["_Title"].TextScaled = true
-Converted["_Title"].TextSize = 14
-Converted["_Title"].TextWrapped = true
-Converted["_Title"].TextXAlignment = Enum.TextXAlignment.Left
-Converted["_Title"].AnchorPoint = Vector2.new(0.5, 0.5)
-Converted["_Title"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Converted["_Title"].BackgroundTransparency = 1
-Converted["_Title"].BorderSizePixel = 0
-Converted["_Title"].Position = UDim2.new(0.543378413, 0, 0.233989015, 0)
-Converted["_Title"].Size = UDim2.new(0, 233, 0, 15)
-Converted["_Title"].ZIndex = 105
-Converted["_Title"].Name = "Title"
-Converted["_Title"].Parent = Converted["_Template"]
-
-Converted["_Description"].Font = Enum.Font.GothamMedium
-Converted["_Description"].Text = "so kewl"
-Converted["_Description"].TextColor3 = Color3.fromRGB(240.00000089406967, 240.00000089406967, 240.00000089406967)
-Converted["_Description"].TextSize = 14
-Converted["_Description"].TextTransparency = 0.30000001192092896
-Converted["_Description"].TextWrapped = true
-Converted["_Description"].TextXAlignment = Enum.TextXAlignment.Left
-Converted["_Description"].TextYAlignment = Enum.TextYAlignment.Top
-Converted["_Description"].AnchorPoint = Vector2.new(0.5, 0.5)
-Converted["_Description"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Converted["_Description"].BackgroundTransparency = 1
-Converted["_Description"].BorderSizePixel = 0
-Converted["_Description"].Position = UDim2.new(0.508141577, 0, 0.637223482, 0)
-Converted["_Description"].Size = UDim2.new(0, 269, 0, 43)
-Converted["_Description"].ZIndex = 105
-Converted["_Description"].Name = "Description"
-Converted["_Description"].Parent = Converted["_Template"]
-
-Converted["_Icon"].Image = "rbxassetid://7072706001"
-Converted["_Icon"].ImageColor3 = Color3.fromRGB(204.0000182390213, 204.0000182390213, 204.0000182390213)
-Converted["_Icon"].AnchorPoint = Vector2.new(0.5, 0.5)
-Converted["_Icon"].BackgroundTransparency = 1
-Converted["_Icon"].BorderSizePixel = 0
-Converted["_Icon"].LayoutOrder = 5
-Converted["_Icon"].Position = UDim2.new(0.0912162289, 0, 0.233880579, 0)
-Converted["_Icon"].Size = UDim2.new(0, 20, 0, 20)
-Converted["_Icon"].ZIndex = 105
-Converted["_Icon"].Name = "Icon"
-Converted["_Icon"].Parent = Converted["_Template"]
-
-Converted["_UIStroke"].Color = Color3.fromRGB(93.00000205636024, 93.00000205636024, 93.00000205636024)
-Converted["_UIStroke"].Thickness = 1.2000000476837158
-Converted["_UIStroke"].Parent = Converted["_Template"]
-
-Converted["_UIListLayout"].Padding = UDim.new(0, 6)
-Converted["_UIListLayout"].HorizontalAlignment = Enum.HorizontalAlignment.Right
-Converted["_UIListLayout"].SortOrder = Enum.SortOrder.LayoutOrder
-Converted["_UIListLayout"].VerticalAlignment = Enum.VerticalAlignment.Bottom
-Converted["_UIListLayout"].Parent = Converted["_Notifications"]
-
-baseNotif = Converted["_Template"]
-
-function tween(go, t, dir)
-    dir = dir or "in"
-    local obj = go
-
-    local startTransparency = (dir == "in") and 1 or 0
-    local endTransparency = (dir == "in") and 0 or 1
-
-    obj.BackgroundTransparency = startTransparency
-
-    local tweenInfo = TweenInfo.new(t, Enum.EasingStyle.Quint, Enum.EasingDirection.Out, 0, false, 0)
-
-    local tween = game:GetService("TweenService"):Create(obj, tweenInfo, {
-        BackgroundTransparency = endTransparency
-    })
-    tween:Play()
-
-    if dir == "out" then
-        for _, e in pairs(obj:GetDescendants()) do
-            if e:IsA("GuiObject") then
-                if e:IsA("TextLabel") then
-                    local texttween = game:GetService("TweenService"):Create(e, tweenInfo, {
-                        TextTransparency = endTransparency
-                    })
-                    texttween:Play()
-                elseif e:IsA("ImageLabel") or e:IsA("ImageButton") then
-                    local imgt = game:GetService("TweenService"):Create(e, tweenInfo, {
-                        ImageTransparency = endTransparency
-                    })
-                    imgt:Play()
-                elseif e:IsA("UIStroke") then
-                    local st = game:GetService("TweenService"):Create(e, tweenInfo, {
-                        Transparency = endTransparency
-                    })
-                    st:Play()
-                end
-            end
-        end
+function Nord:Notify(Title, Message, Type, Duration)
+    Nord["Config"] = _G.Config or {["Theme"] = (Var or "Discord")}; -- Pew
+	local Type2Color = {['error'] = Color3.fromRGB(255, 87, 87), ['warn'] = Color3.fromRGB(255, 255, 127), ['success'] = Color3.fromRGB(85, 255, 127), ['normal'] = Color3.fromRGB(255, 255, 255)}
+	local Frame = New("Frame", {Name = "MainFrame", Parent = NotificationHolder, BackgroundColor3 = Color3.fromRGB(70, 70, 73),
+		Size = UDim2.new(0.9, 0, 0.097, 0), ZIndex = 2, BackgroundTransparency = 1
+	}); local DropShadow = New("ImageLabel", {Parent = Frame, BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0.512, 0), Size = UDim2.new(1.053, 0, 1.135, 0), Image = "rbxassetid://7912134082",
+		ImageColor3 = Type2Color[Type:lower()], ImageTransparency = 1, ScaleType = "Slice", SliceCenter = Rect.new(95, 95, 205, 205)
+	}); New("UICorner", {Parent = Frame, CornerRadius = UDim.new(0, 5)}); New("UICorner", {Parent = DropShadow, CornerRadius = UDim.new(0, 5)});
+	local Header = New("TextLabel", {Parent = Frame, BackgroundTransparency = 1, Position = UDim2.new(0.237, 0, 0.172, 0), Size = UDim2.new(0.4, 0, 0.358, 0), ZIndex = 2, Font = "GothamMedium",
+		Text = Title or "Nord", TextSize = 14, TextXAlignment = "Left", TextScaled = true, TextColor3 = Color3.new(1, 1, 1)
+	}); Nord:TextConstraint(Header);
+	local Msg = New("TextLabel", {Parent = Frame, BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0.563, 0), Size = UDim2.new(0.927, 0, 0.5, 0), ZIndex = 2, Font = "Gotham",
+		Text = Message, TextSize = 12, TextXAlignment = "Left", TextScaled = true, TextColor3 = Color3.new(1, 1, 1)
+	}); Nord:TextConstraint(Msg);
+	local LineHolder = New("Frame", {Parent = Frame, BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0.93, 0), Size = UDim2.new(0.9278, 0, 0, 1), ZIndex = 2})
+	New("UIListLayout", {Parent = LineHolder, HorizontalAlignment = "Left", VerticalAlignment = "Center"});
+	local Line = New("Frame", {Name = "Line", Parent = LineHolder, BackgroundColor3 = Type2Color[Type:lower()], Size = UDim2.new(0, 0, 1, 0), ZIndex = 2});
+	local Hover = New("TextButton", {Parent = Frame, BackgroundTransparency = 1, Text = "", Size = UDim2.new(1, 0, 1, 0), Position = UDim2.new(0.5, 0, 0.5, 0), ZIndex = 3});
+    Nord:ApplyTheme(Nord["Config"]["Theme"], Frame)
+    if not CTheme and Nord["Config"]["Theme"]:lower() == "light" and Type:lower() == "normal" then -- Pew
+        Line["BackgroundColor3"] = Color3.new(0, 0, 0);
+        DropShadow["ImageColor3"] = Color3.new(0, 0, 0)
     end
+
+    coroutine.wrap(function()
+        Tween(Frame, 0.25, "Quad", "In", {BackgroundTransparency = 0});
+        Tween(DropShadow, 0.25, "Quad", "In", {ImageTransparency = 0.5}); wait(0.5);
+        Tween(Header, 0.5, "Quad", "Out", {TextTransparency = 0}); wait(0.25);
+        Tween(Msg, 0.5, "Quad", "Out", {TextTransparency = 0}); wait(0.25);
+        
+        local MainTween = Tween(Line, Duration, "Sine", "InOut", {Size = UDim2.new(1, 0, 1, 0)}, "true"); MainTween:Play();
+        Hover["MouseEnter"]:Connect(function()
+            if MainTween["PlaybackState"] == Enum["PlaybackState"]["Playing"] then
+                MainTween:Pause()
+            end
+        end); 
+        Hover["MouseLeave"]:Connect(function()
+            if MainTween["PlaybackState"] == Enum["PlaybackState"]["Paused"] then
+                MainTween:Play()
+            end
+        end);
+        repeat wait() until MainTween["PlaybackState"] == Enum["PlaybackState"]["Completed"]
+        Tween(Line, 0.25, "Quad", "Out", {Size = UDim2.new(0, 0, 1, 0)});
+        Tween(Msg, 0.25, "Quad", "Out", {TextTransparency = 1}); 
+        Tween(Header, 0.25, "Quint", "Out", {TextTransparency = 1}); wait(0.4);
+        Tween(DropShadow, 0.25, "Quint", "Out", {ImageTransparency = 1});
+        Tween(Frame, 0.25, "Quint", "Out", {BackgroundTransparency = 1}); wait(0.25); Frame:Destroy();
+    end)()
 end
-
-function lib:MakeNotification(notif_table:table)
-	local nt = notif_table or {
-		Title = "focat's notification lib",
-		Text = "This is a test notification.",
-		Duration = 5
-	}
-
-	local title = nt.Title
-	local text = nt.Text
-	local dur = nt.Duration
-
-	local newNotif = baseNotif:Clone()
-	newNotif.Parent = Converted["_Notifications"]
-	newNotif.Title.Text = title
-	newNotif.Description.Text = text
-	newNotif.Visible = true
-	newNotif.Name = "CiriusNotification"
-
-	local holder = Converted["_Notifications"]
-	local notifications = holder:GetChildren()
-	local numNotifications = #notifications
-
-	local layout = Converted["_UIListLayout"]
-	local layoutOrder = layout.Padding.Offset
-
-	for i, notification in ipairs(notifications) do
-		if notification ~= baseNotif and
-			notification ~= newNotif and
-			notification ~= layout
-		then
-			if numNotifications == 1 then
-				layoutOrder = layoutOrder - 1
-			else
-				layoutOrder = notification.LayoutOrder + 1
-			end
-			tween(notification, 0.25)
-		end
-	end
-
-	newNotif.LayoutOrder = layoutOrder
-
-	tween(newNotif, 0.25, "in")
-
-	spawn(function()
-		wait(dur)
-		tween(newNotif, 0.25, "out")
-		wait(0.25)
-		newNotif:Destroy()
-	end)
-end
-
-return lib
+return Nord
