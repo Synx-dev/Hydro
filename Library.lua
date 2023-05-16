@@ -354,7 +354,7 @@ do
             info.Color = Color3.fromRGB(164, 53, 90)
         end
         if info.Credit==nil then
-            info.Credit = "Made with love <3"
+            info.Credit = "[Me-Creator] Shit this change so hard"
         end
         info.FullName = info.FullName or info.Name
 
@@ -2052,20 +2052,20 @@ do
         if info.ConfigFolder then
             -- load data
             local cf = info.ConfigFolder
-            local config = cf.."/config.json"
+            local config = cf.."HydroStorage/Core/UILib/config.json"
             if not isfolder(cf) then
                 makefolder(cf)
             end
             if not isfile(config) then
-                writefile("HydroStorage/Core/UILib"..config.."","")
+                writefile("HydroStorage/Core/UILib/config.json","")
             end
             if info.CheckKey then
-                local key = cf.."/key.txt"
+                local key = cf.."HydroStorage/Hydrokey.txt"
                 if not isfile(key) then
-                    writefile("HydroStorage"..key.."","HYDRO_AUTHKEY@")
+                    writefile("HydroStorage/Hydrokey.txt","HYDRO_AUTHKEY@")
                 end
                 savedKey = readfile(key)
-                if savedKey == "" then
+                if savedKey == "HYDRO_AUTHKEY@" then
                     savedKey = nil
                 end
             end
