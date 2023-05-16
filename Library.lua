@@ -59,7 +59,7 @@ Library.Icons = {
 
 local old_warn = warn
 local warn = function(...)
-    old_warn("[ATLAS]",...)
+    old_warn("[Hydro-SERVICE]: ",...)
 end
 
 -- UTILITY
@@ -74,8 +74,7 @@ do
     end
 
     function utility:Warn(...)
-        warn("ARTEMIS:", ...)
-    end
+        warn("[Hydro-SERVICE]: ",...)
 
     function utility:Wait()
         return Run.RenderStepped:Wait()
