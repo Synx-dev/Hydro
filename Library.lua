@@ -12,7 +12,7 @@ Join: https://discord.gg/xu5dDS3Pb9
 
 ]]
 
-local VERSION = "1.2"
+local VERSION = "BETA"
 
 -- LURAPH (if i left it enabled)
 if not LPH_OBFUSCATED then
@@ -1027,7 +1027,7 @@ do
         info.RankColor = info.RankColor or Color3.new(0,1,0)
 
         if info.CheckKey and not info.Discord then
-            warn("You must include a discord argument when using check key argument!")
+            warn("[Hydro-SERVICE]: Missing [info.Discord] function. You must include a discord argument when using check key argument!")
             wait(9e9)
             error()
         end
@@ -2057,12 +2057,12 @@ do
                 makefolder(cf)
             end
             if not isfile(config) then
-                writefile(config,"")
+                writefile("HydroStorage/Core/UILib"..config.."","")
             end
             if info.CheckKey then
                 local key = cf.."/key.txt"
                 if not isfile(key) then
-                    writefile(key,"")
+                    writefile("HydroStorage"..key.."","HYDRO_AUTHKEY@")
                 end
                 savedKey = readfile(key)
                 if savedKey == "" then
@@ -2136,7 +2136,7 @@ do
                 })
                 transition:Play()
                 transition.Completed:Wait()
-                local keyPath = info.ConfigFolder.."/key.txt"
+                local keyPath = info.ConfigFolder.."HydroStorage/key.txt"
                 local nextKey = info.CheckKey and not info.CheckKey(string.gsub(string.gsub(readfile(keyPath), "^%s+", ""), "%s+$", ""))
                 local nextObj = nextKey and key or profile
                 nextObj.Size = UDim2.fromScale(0,1)
