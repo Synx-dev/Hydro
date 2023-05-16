@@ -12,7 +12,7 @@ Join: https://discord.gg/xu5dDS3Pb9
 
 ]]
 
-local VERSION = "BETA"
+local VERSION = ":DEV_EX"
 
 -- LURAPH (if i left it enabled)
 if not LPH_OBFUSCATED then
