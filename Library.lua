@@ -1,13 +1,7 @@
 --[[
 
-â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•—â–‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—
-â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â•â•â•â–ˆâ–ˆâ•”â•â•â•â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â•â•â•
-â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘
-â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–‘â•â•â•â•â–ˆâ–ˆâ•—
-â–ˆâ–ˆâ•‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘â–‘â–‘â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
-â•â•â•â–‘â–‘â•â•â•â–‘â–‘â–‘â•â•â•â–‘â–‘â–‘â•â•â•â•â•â•â•â•â•â•â•â–‘â–‘â•â•â•â•â•â•â•â•â•â•â–‘
-
 Made by RoadToGlory#9879
+EDITED BY HYDRO SOFTWARE
 Join: https://discord.gg/xu5dDS3Pb9
 
 ]]
@@ -200,7 +194,7 @@ do
 
     function utility:GetColor(percentage, ColorKeyPoints)
         if (percentage < 0) or (percentage>1) then
-            utility:Warn('getColor got out of bounds percentage (less than 0 or greater than 1')
+            utility:Warn('[Hydro-SERVICE]: utility:GetColor got out of bounds perentage. GetColor got out of bounds percentage (less than 0 or greater than 1')
         end
         
         local closestToLeft = ColorKeyPoints[1]
@@ -219,7 +213,7 @@ do
                 return color
             end
         end
-        utility:Warn('Color not found!')
+        utility:Warn('[Hydro-SERVICE]: Color3.RBG Not Found!. Color not found!')
         return color
     end
 
@@ -286,7 +280,7 @@ do
     end
 
     function utility:Tween(object,properties,duration,...)
-        assert(object and properties and duration,"Missing arguments for utility::Tween")
+        assert(object and properties and duration,"[Hydro-SERVICE]: utility:Tween missing arguments. Missing arguments for utility::Tween")
         local tween = TS:Create(object,TweenInfo.new(duration,...),properties)
         tween:Play()
         return tween
@@ -300,7 +294,7 @@ do
     function utility:InitDragging(frame,button)
         button = button or frame
 
-        assert(button and frame,"Need a frame in order to start dragging")
+        assert(button and frame,"[Hydro-SERVIE]: Frame.UI Not Found. Need a frame in order to start dragging")
 
         -- dragging
         local _dragging = false
@@ -347,8 +341,8 @@ end
 do
     function Library.new(info)
         -- Requirements
-        utility:Requirement(type(info)=="table","Info must be a table!")
-        utility:Requirement(info.Name,"Missing config folder argument")
+        utility:Requirement(type(info)=="table","[Hydro-SERVICE]: info.type is not table. Info must be a table!")
+        utility:Requirement(info.Name,"[Hydro-SERVICE]: Missing config folder argument")
         if info.Color==nil then
             info.Color = Color3.fromRGB(164, 53, 90)
         end
@@ -2051,20 +2045,20 @@ do
         if info.ConfigFolder then
             -- load data
             local cf = info.ConfigFolder
-            local config = cf.."HydroStorage/Core/UILib/config.json"
+            local config = cf.."/config.json"
             if not isfolder(cf) then
                 makefolder(cf)
             end
             if not isfile(config) then
-                writefile("HydroStorage/Core/UILib/config.json","")
+                writefile(config,"---- [[Hydro's Software Generated File]] ----\n")
             end
             if info.CheckKey then
-                local key = cf.."HydroStorage/Hydrokey.txt"
+                local key = cf.."/Hydrokey.txt"
                 if not isfile(key) then
-                    writefile("HydroStorage/Hydrokey.txt","HYDRO_AUTHKEY@")
+                    writefile(key,"")
                 end
                 savedKey = readfile(key)
-                if savedKey == "HYDRO_AUTHKEY@" then
+                if savedKey == "" then
                     savedKey = nil
                 end
             end
@@ -2135,7 +2129,7 @@ do
                 })
                 transition:Play()
                 transition.Completed:Wait()
-                local keyPath = info.ConfigFolder.."HydroStorage/key.txt"
+                local keyPath = info.ConfigFolder.."Hydrokey.txt"
                 local nextKey = info.CheckKey and not info.CheckKey(string.gsub(string.gsub(readfile(keyPath), "^%s+", ""), "%s+$", ""))
                 local nextObj = nextKey and key or profile
                 nextObj.Size = UDim2.fromScale(0,1)
