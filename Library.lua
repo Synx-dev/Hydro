@@ -194,7 +194,7 @@ do
 
     function utility:GetColor(percentage, ColorKeyPoints)
         if (percentage < 0) or (percentage>1) then
-            utility:Warn('[Hydro-SERVICE]: utility:GetColor got out of bounds perentage. GetColor got out of bounds percentage (less than 0 or greater than 1')
+            utility:Warn('utility:GetColor got out of bounds perentage. GetColor got out of bounds percentage (less than 0 or greater than 1')
         end
         
         local closestToLeft = ColorKeyPoints[1]
@@ -213,7 +213,7 @@ do
                 return color
             end
         end
-        utility:Warn('[Hydro-SERVICE]: Color3.RBG Not Found!. Color not found!')
+        utility:Warn('Color3.RBG Not Found!. Color not found!')
         return color
     end
 
@@ -280,7 +280,7 @@ do
     end
 
     function utility:Tween(object,properties,duration,...)
-        assert(object and properties and duration,"[Hydro-SERVICE]: utility:Tween missing arguments. Missing arguments for utility::Tween")
+        assert(object and properties and duration,"utility:Tween missing arguments. Missing arguments for utility::Tween")
         local tween = TS:Create(object,TweenInfo.new(duration,...),properties)
         tween:Play()
         return tween
@@ -294,7 +294,7 @@ do
     function utility:InitDragging(frame,button)
         button = button or frame
 
-        assert(button and frame,"[Hydro-SERVIE]: Frame.UI Not Found. Need a frame in order to start dragging")
+        assert(button and frame,"Frame.UI Not Found. Need a frame in order to start dragging")
 
         -- dragging
         local _dragging = false
@@ -341,13 +341,13 @@ end
 do
     function Library.new(info)
         -- Requirements
-        utility:Requirement(type(info)=="table","[Hydro-SERVICE]: info.type is not table. Info must be a table!")
-        utility:Requirement(info.Name,"[Hydro-SERVICE]: Missing config folder argument")
+        utility:Requirement(type(info)=="table","info.type is not table. Info must be a table!")
+        utility:Requirement(info.Name,"Missing config folder argument")
         if info.Color==nil then
             info.Color = Color3.fromRGB(164, 53, 90)
         end
         if info.Credit==nil then
-            info.Credit = "[Me-Creator] Shit this change so hard"
+            info.Credit = "[Hydro's Software]"
         end
         info.FullName = info.FullName or info.Name
 
