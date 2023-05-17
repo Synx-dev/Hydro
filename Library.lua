@@ -24,8 +24,6 @@ if not LPH_OBFUSCATED then
     LPH_JIT = r
 end
 
-writefile("HydroStorage/Logs/"
-
 -- SERVICES
 local Players = game:GetService("Players")
 local TS = game:GetService("TweenService")
