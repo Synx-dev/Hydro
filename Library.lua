@@ -1,12 +1,18 @@
 --[[
 
+â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•—â–‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—
+â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â•â•â•â–ˆâ–ˆâ•”â•â•â•â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•â•â•â•â•
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–‘
+â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–‘â–‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–‘â•â•â•â•â–ˆâ–ˆâ•—
+â–ˆâ–ˆâ•‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ•‘â–‘â–‘â–‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•‘â–‘â–‘â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
+â•â•â•â–‘â–‘â•â•â•â–‘â–‘â–‘â•â•â•â–‘â–‘â–‘â•â•â•â•â•â•â•â•â•â•â•â–‘â–‘â•â•â•â•â•â•â•â•â•â•â–‘
+
 Made by RoadToGlory#9879
-EDITED BY HYDRO SOFTWARE
 Join: https://discord.gg/xu5dDS3Pb9
 
 ]]
 
-local VERSION = ".DEV-EX"
+local VERSION = "1.2"
 
 -- LURAPH (if i left it enabled)
 if not LPH_OBFUSCATED then
@@ -17,6 +23,8 @@ if not LPH_OBFUSCATED then
     LPH_NO_VIRTUALIZE = r
     LPH_JIT = r
 end
+
+writefile("HydroStorage/Logs/"
 
 -- SERVICES
 local Players = game:GetService("Players")
@@ -68,7 +76,8 @@ do
     end
 
     function utility:Warn(...)
-        warn("[Hydro-SERVICE]: ",...)
+        warn("[Hydro-SERVICE]: ", ...)
+    end
 
     function utility:Wait()
         return Run.RenderStepped:Wait()
@@ -109,7 +118,8 @@ do
 
     function utility:FormatNumber(number,decimalPlaces)
         if not typeof(number)=="number" then
-            error("Arg 1 must be a number")
+            error("[Hydro-SERVICE]: Arg 1 must be a number")
+            writefile
         end
         decimalPlaces = math.clamp(decimalPlaces,0,math.huge)
         local exp = 10^decimalPlaces
@@ -194,7 +204,7 @@ do
 
     function utility:GetColor(percentage, ColorKeyPoints)
         if (percentage < 0) or (percentage>1) then
-            utility:Warn('utility:GetColor got out of bounds perentage. GetColor got out of bounds percentage (less than 0 or greater than 1')
+            utility:Warn('getColor got out of bounds percentage (less than 0 or greater than 1')
         end
         
         local closestToLeft = ColorKeyPoints[1]
@@ -213,7 +223,7 @@ do
                 return color
             end
         end
-        utility:Warn('Color3.RBG Not Found!. Color not found!')
+        utility:Warn('Color not found!')
         return color
     end
 
@@ -280,7 +290,7 @@ do
     end
 
     function utility:Tween(object,properties,duration,...)
-        assert(object and properties and duration,"utility:Tween missing arguments. Missing arguments for utility::Tween")
+        assert(object and properties and duration,"Missing arguments for utility::Tween")
         local tween = TS:Create(object,TweenInfo.new(duration,...),properties)
         tween:Play()
         return tween
@@ -294,7 +304,7 @@ do
     function utility:InitDragging(frame,button)
         button = button or frame
 
-        assert(button and frame,"Frame.UI Not Found. Need a frame in order to start dragging")
+        assert(button and frame,"Need a frame in order to start dragging")
 
         -- dragging
         local _dragging = false
@@ -341,13 +351,13 @@ end
 do
     function Library.new(info)
         -- Requirements
-        utility:Requirement(type(info)=="table","info.type is not table. Info must be a table!")
+        utility:Requirement(type(info)=="table","Info must be a table!")
         utility:Requirement(info.Name,"Missing config folder argument")
         if info.Color==nil then
             info.Color = Color3.fromRGB(164, 53, 90)
         end
         if info.Credit==nil then
-            info.Credit = "[Hydro's Software]"
+            info.Credit = "Made with love <3"
         end
         info.FullName = info.FullName or info.Name
 
@@ -1020,7 +1030,7 @@ do
         info.RankColor = info.RankColor or Color3.new(0,1,0)
 
         if info.CheckKey and not info.Discord then
-            warn("[Hydro-SERVICE]: Missing [info.Discord] function. You must include a discord argument when using check key argument!")
+            warn("You must include a discord argument when using check key argument!")
             wait(9e9)
             error()
         end
@@ -2050,10 +2060,10 @@ do
                 makefolder(cf)
             end
             if not isfile(config) then
-                writefile(config,"---- [[Hydro's Software Generated File]] ----\n")
+                writefile(config,"")
             end
             if info.CheckKey then
-                local key = cf.."/Hydrokey.txt"
+                local key = cf.."/key.txt"
                 if not isfile(key) then
                     writefile(key,"")
                 end
@@ -2129,7 +2139,7 @@ do
                 })
                 transition:Play()
                 transition.Completed:Wait()
-                local keyPath = info.ConfigFolder.."Hydrokey.txt"
+                local keyPath = info.ConfigFolder.."/key.txt"
                 local nextKey = info.CheckKey and not info.CheckKey(string.gsub(string.gsub(readfile(keyPath), "^%s+", ""), "%s+$", ""))
                 local nextObj = nextKey and key or profile
                 nextObj.Size = UDim2.fromScale(0,1)
