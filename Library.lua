@@ -59,7 +59,7 @@ Library.Icons = {
 
 local old_warn = warn
 local warn = function(...)
-    old_warn("[Hydro-SERVICE]: ",...)
+    old_warn("[ATLAS]",...)
 end
 
 -- UTILITY
@@ -74,7 +74,7 @@ do
     end
 
     function utility:Warn(...)
-        warn("[Hydro-SERVICE]: ", ...)
+        warn("ARTEMIS:", ...)
     end
 
     function utility:Wait()
@@ -116,8 +116,7 @@ do
 
     function utility:FormatNumber(number,decimalPlaces)
         if not typeof(number)=="number" then
-            error("[Hydro-SERVICE]: Arg 1 must be a number")
-            writefile
+            error("Arg 1 must be a number")
         end
         decimalPlaces = math.clamp(decimalPlaces,0,math.huge)
         local exp = 10^decimalPlaces
