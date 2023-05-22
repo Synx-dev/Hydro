@@ -5,14 +5,14 @@ by Sirius
 
 shlex | Designing + Programming
 iRay  | Programming
-
+HydroSoftware | Remake cuz it open-sourced?
 ]]
 
 
 
-local Release = "Beta 8"
+local Release = "DEV-EX"
 local NotificationDuration = 6.5
-local RayfieldFolder = "HydroStorage/UI"
+local RayfieldFolder = "HydroStorage/Core/UI"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".hdo"
 
@@ -115,6 +115,8 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
+
+local HydroIcon = readfile("HydroStorage/Core/Iconlib.lua")
 local Rayfield = game:GetObjects("rbxassetid://10804731440")[1]
 
 Rayfield.Enabled = false
@@ -177,7 +179,7 @@ function ChangeTheme(ThemeName)
 	for _, obj in ipairs(Rayfield:GetDescendants()) do
 		if obj.ClassName == "TextLabel" or obj.ClassName == "TextBox" or obj.ClassName == "TextButton" then
 			if SelectedTheme.TextFont ~= "Default" then 
-				obj.TextColor3 = SelectedTheme.TextKeyColor
+				obj.TextColor3 = SelectedTheme.TextColor
 				obj.Font = SelectedTheme.TextFont
 			end
 		end
@@ -253,7 +255,13 @@ local function LoadConfiguration(Configuration)
 				end    
 			end)
 		else
-			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
+			RayfieldLibrary:Notify({
+                Title = "[Hydro] Flag Error", 
+                Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script",
+                Duration = 6.5,
+                Image = 4483362458,
+                Sound:Play()
+            })
 		end
 	end
 end
@@ -494,11 +502,18 @@ end)()
 
 function RayfieldLibrary:Notify(NotificationSettings)
 	spawn(function()
-		local ActionCompleted = true
-		local Notification = Notifications.Template:Clone()
-		Notification.Parent = Notifications
-		Notification.Name = NotificationSettings.Title or "Unknown Title"
-		Notification.Visible = true
+        if NotifySound:Play() ~= nil then
+            local NotifySound = Instance.new("Sound")
+            Notifysound.Name = "NotifySound"
+            Notifysound.Volume = 1
+            NotifySound.SoundId = "rbxassetid://9128519965"
+            NotifySound.Parent = game.Workspace
+		    local ActionCompleted = true
+		    local Notification = Notifications.Template:Clone()
+		    Notification.Parent = Notifications
+		    Notification.Name = NotificationSettings.Title or "Unknown Title"
+		    Notification.Visible = true
+        end
 
 		local blurlight = nil
 		if not getgenv().SecureMode then
@@ -532,7 +547,7 @@ function RayfieldLibrary:Notify(NotificationSettings)
 				NewAction.MouseButton1Click:Connect(function()
 					local Success, Response = pcall(Action.Callback)
 					if not Success then
-						print("Rayfield | Action: "..Action.Name.." Callback Error " ..tostring(Response))
+						print("[Hydro-SERVICE]: Action ["..Action.Name.."] Callback Error " ..tostring(Response))
 					end
 					ActionCompleted = true
 				end)
@@ -541,7 +556,7 @@ function RayfieldLibrary:Notify(NotificationSettings)
 		Notification.BackgroundColor3 = SelectedTheme.Background
 		Notification.Title.Text = NotificationSettings.Title or "Unknown"
 		Notification.Title.TextTransparency = 1
-		Notification.Title.TextColor3 = SelectedTheme.TextColor
+		Notification.Title.TextColor3 = SelectedTheme.TextKeyColor
 		Notification.Description.Text = NotificationSettings.Content or "Unknown"
 		Notification.Description.TextTransparency = 1
 		Notification.Description.TextColor3 = SelectedTheme.TextColor
@@ -897,9 +912,10 @@ function RayfieldLibrary:CreateWindow(Settings)
 		if not Settings.ConfigurationSaving.FileName then
 			Settings.ConfigurationSaving.FileName = tostring(game.PlaceId)
 		end
+        --[[ Nah bro :skull:
 		if not isfolder(RayfieldFolder.."/".."Configuration Folders") then
 
-		end
+		--]] 
 		if Settings.ConfigurationSaving.Enabled == nil then
 			Settings.ConfigurationSaving.Enabled = false
 		end
