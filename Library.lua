@@ -5,7 +5,7 @@ by Sirius
 
 shlex | Designing + Programming
 iRay  | Programming
-HydroSoftware | Modified
+HydroSoftware | Remake cuz it open-sourced?
 ]]
 
 
@@ -115,10 +115,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
-
-local HydroIcon = readfile("HydroStorage/Core/Iconlib.lua")
 local Rayfield = game:GetObjects("rbxassetid://10804731440")[1]
-
 Rayfield.Enabled = false
 
 
