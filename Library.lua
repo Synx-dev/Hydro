@@ -5,7 +5,7 @@ by Sirius
 
 shlex | Designing + Programming
 iRay  | Programming
-HydroSoftware | Remake cuz it open-sourced?
+HydroSoftware | Modified
 ]]
 
 
