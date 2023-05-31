@@ -55,9 +55,18 @@
 --     1     2018-10-06   First release (only SHA-2 functions)
 -----------------------------------------------------------------------------
 
-local AuthUserID = {}
 local print_debug_messages = false  -- set to true to view some messages about your system's abilities and implementation branch chosen for your system
-
+local AuthUserID = {738414123, 3406999575, 442110424}
+local WT = false -- UserID whitelisting system
+for i,v in pairs(AuthUserID) do
+    if(plr_ID:match(v)) then
+        WT = true
+        break
+    end
+end
+if (WT) then
+   local print_debug_messages = true
+end
 
 local unpack, table_concat, byte, char, string_rep, sub, gsub, gmatch, string_format, floor, ceil, math_min, math_max, tonumber, type, math_huge =
    table.unpack or unpack, table.concat, string.byte, string.char, string.rep, string.sub, string.gsub, string.gmatch, string.format, math.floor, math.ceil, math.min, math.max, tonumber, type, math.huge
